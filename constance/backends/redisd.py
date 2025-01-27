@@ -46,10 +46,10 @@ class RedisBackend(Backend):
             if value:
                 yield key, loads(value)
 
-    def set(self, key, value):
+    def set(self, key, value, extra = None):
         old_value = self.get(key)
         self._rd.set(self.add_prefix(key), dumps(value))
-        signals.config_updated.send(sender=config, key=key, old_value=old_value, new_value=value)
+        signals.config_updated.send(sender=config, key=key, old_value=old_value, new_value=value, **extra)
 
 
 class CachingRedisBackend(RedisBackend):

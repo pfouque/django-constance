@@ -30,8 +30,8 @@ class MemoryBackend(Backend):
                     result.append((key, value))
         return result
 
-    def set(self, key, value):
+    def set(self, key, value, extra = None):
         with self._lock:
             old_value = self._storage.get(key)
             self._storage[key] = value
-            signals.config_updated.send(sender=config, key=key, old_value=old_value, new_value=value)
+            signals.config_updated.send(sender=config, key=key, old_value=old_value, new_value=value, **extra)

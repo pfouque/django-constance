@@ -86,7 +86,7 @@ class DatabaseBackend(Backend):
                     self._cache.add(key, value)
         return value
 
-    def set(self, key, value):
+    def set(self, key, value, extra=None):
         key = self.add_prefix(key)
         created = False
         queryset = self._model._default_manager.all()
@@ -118,7 +118,7 @@ class DatabaseBackend(Backend):
         if self._cache:
             self._cache.set(key, value)
 
-        signals.config_updated.send(sender=config, key=key, old_value=old_value, new_value=value)
+        signals.config_updated.send(sender=config, key=key, old_value=old_value, new_value=value, **extra)
 
     def clear(self, sender, instance, created, **kwargs):
         if self._cache and not created:
